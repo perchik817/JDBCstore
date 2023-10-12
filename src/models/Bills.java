@@ -2,7 +2,8 @@ package models;
 import java.time.LocalDateTime;
 
 public class Bills {
-    private Long id, id_employee;
+    private Long id;
+    private Employee id_employee;
     private double total;
     private LocalDateTime time;
 
@@ -16,8 +17,13 @@ public class Bills {
                 '}';
     }
 
-    public Bills(Long id, Long id_employee, double total, LocalDateTime time) {
+    public Bills(Long id, Employee id_employee, double total, LocalDateTime time) {
         this.id = id;
+        this.id_employee = id_employee;
+        this.total = total;
+        this.time = time;
+    }
+    public Bills(Employee id_employee, double total, LocalDateTime time) {
         this.id_employee = id_employee;
         this.total = total;
         this.time = time;
@@ -32,11 +38,11 @@ public class Bills {
         this.id = id;
     }
 
-    public Long getId_employee() {
+    public Employee getId_employee() {
         return id_employee;
     }
 
-    public void setId_employee(Long id_employee) {
+    public void setId_employee(Employee id_employee) {
         this.id_employee = id_employee;
     }
 

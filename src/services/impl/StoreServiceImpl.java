@@ -13,9 +13,9 @@ public class StoreServiceImpl implements StoreService {
     DBHelper dbHelper = new DBHelperImpl();
 
     @Override
-    public String saveStore(String nameStore) {
-        PreparedStatement preparedStatement=dbHelper.getStatement("insert into tb_store (name) values (?)");
-        try {
+    public String createStore(String nameStore) {
+
+        try (PreparedStatement preparedStatement=dbHelper.getStatement("insert into tb_store (name) values (?)")){
             preparedStatement.setString(1,nameStore);
             preparedStatement.executeUpdate();
             preparedStatement.close();
@@ -26,10 +26,10 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public Store findById(Long id) {
+    public Store findStoreById(Long id) {
         Store store = new Store();
-        PreparedStatement ps= dbHelper.getStatement("select * from tb_store where id=?");
-        try {
+
+        try (PreparedStatement ps= dbHelper.getStatement("select * from tb_store where id=?")){
             ps.setLong(1,id.intValue());
             ResultSet resultSet=ps.executeQuery();
 
@@ -40,15 +40,15 @@ public class StoreServiceImpl implements StoreService {
             return store;
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Произошла ошибка при поиске магазина");
         }
     }
 
     @Override
-    public List<Store> findAll() {
+    public List<Store> showAllStores() {
         List<Store> store=new ArrayList<>();
-        PreparedStatement ps= dbHelper.getStatement("select * from tb_store ");
-        try {
+
+        try (PreparedStatement ps= dbHelper.getStatement("select * from tb_store ")){
 
             ResultSet resultSet=ps.executeQuery();
 
@@ -61,25 +61,35 @@ public class StoreServiceImpl implements StoreService {
             return store;
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Произошла ошибка при выводе списка магазинов");
         }
 
     }
 
     @Override
-    public Store update(Long id, String name) {
-        PreparedStatement preparedStatement=dbHelper.getStatement("update tb_store set name=? where id=? ");
-        try {
+    public Long deleteStore(Long id) {
+        try (PreparedStatement ps = dbHelper.getStatement("DELETE FROM tb_store WHERE id = ?")){
+            ps.setLong(1, id);
+            int result = ps.executeUpdate();
+            return id;
+        }catch (SQLException e){
+            throw new RuntimeException("Произошла ошибка при удалении магазина", e);
+        }
+    }
+
+    @Override
+    public Store updateStore(Long id, String name) {
+
+        try (PreparedStatement preparedStatement=dbHelper.getStatement("update tb_store set name=? where id=? ")){
             preparedStatement.setString(1,name);
             preparedStatement.setLong(2,id);
             preparedStatement.executeUpdate();
-            preparedStatement.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Произошла ошибка при Обновлении магазина");
+            throw new RuntimeException("Произошла ошибка при обновлении магазина");
         }
 
-        return findById(id);
+        return findStoreById(id);
     }
 }

@@ -5,10 +5,11 @@ import models.Store;
 import java.util.List;
 
 public interface StoreService {
-    String saveStore(String nameStore);
-    Store findById(Long id);
-    List<Store> findAll();
+    String createStore(String nameStore);
+    Store findStoreById(Long id);
+    List<Store> showAllStores();
+    Long deleteStore(Long id);
+    Store updateStore(Long id,String name);
 
-    Store update(Long id,String name);
 
 }
